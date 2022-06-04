@@ -24,7 +24,9 @@ int main() {
     tick(&clTime);
 
 #ifdef BASE
-//    ans = baseline(t, p);
+    ans = baseline(t, p);
+#endif
+#ifdef PART
     ans = partition(t, p);
 #endif
 
