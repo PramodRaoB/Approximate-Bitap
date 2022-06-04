@@ -13,4 +13,4 @@ elseif(DP)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDP")
 endif ()
 
-add_executable(approximate_bitap driver.cpp baseline.cpp partition.cpp helper.cpp)
+add_executable(approximate_bitap driver.cpp baseline.cpp partition.cpp partition_parallel.cpp helper.cpp)
