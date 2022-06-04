@@ -22,7 +22,7 @@
 #define INP 2
 #endif
 
-#define K 1000
+#define K 700
 
 const int alpha = 4;
 

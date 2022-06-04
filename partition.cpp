@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <iostream>
 #include "include.h"
 
 using namespace std;
@@ -61,6 +62,7 @@ vector<int> partition(string &t, string &p) {
         if (ind >= interleaved.length()) ind = (ind % r) + 1;
     }
     vector<int> ret = bitap_base_parallel(t, interleaved);
+    cout << "Found exact matches of partitions: " << ret.size() << endl;
     vector<pair<int, int>> range;
     pair<int, int> curr = {-1, -1};
     sort(ret.begin(), ret.end());
@@ -77,6 +79,7 @@ vector<int> partition(string &t, string &p) {
         }
     }
     if (curr.first != -1) range.push_back(curr);
+    cout << "Number of ranges to be checked: " << range.size() << endl;
 
     bitset<P_LEN + 1> init;
     init.set();
@@ -90,9 +93,9 @@ vector<int> partition(string &t, string &p) {
 
     vector<int> ans;
 #pragma omp parallel for schedule(static, 1)
-    for (auto &ind: range) {
-        int begin = ind.first;
-        int end = ind.second;
+    for (int ind = 0; ind < range.size(); ind++) {
+        int begin = range[ind].first;
+        int end = range[ind].second;
         vector<int> thread_ans;
         vector<vector<bitset<P_LEN + 1>>> dp(K + 1, vector<bitset<P_LEN + 1>>(2, init));
         for (int i = 0; i <= K; i++) {
