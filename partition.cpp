@@ -4,57 +4,8 @@
 
 using namespace std;
 
-#define CHUNK_SIZE (262144)
-
-map<char, int> mp;
-int r;
-
-vector<int> bitap_base_parallel(string &t, string &p) {
-    int N = t.length(), M = p.length();
-    vector<int> ans;
-    bitset<P_LEN + 1> R;
-    R.set();
-
-    vector<bitset<P_LEN + 1>> pattern_mask(alpha, R);
-//   build pattern mask
-    for (int i = 0; i < M; i++)
-        pattern_mask[mp[p[i]]][i] = false;
-
-
-    int n = N - r + 1;
-    bitset<P_LEN + 1> test;
-    for (int i = 0; i < K + 1; i++) test.set(M - i);
-#pragma omp parallel for schedule(static, 1)
-    for (int chunk_start = 0; chunk_start < n; chunk_start += CHUNK_SIZE) {
-        int end = min(chunk_start + CHUNK_SIZE, n);
-        int begin = max(chunk_start - r + 1, 0);
-        vector<int> thread_ans;
-        bitset<P_LEN + 1> S;
-        S.set();
-
-        S[0] = false;
-        for (int i = begin; i < end; i++) {
-            S |= pattern_mask[mp[t[i]]];
-            S <<= K + 1;
-            if ((test & S).count() < K + 1)
-                thread_ans.push_back(i - r + 1);
-        }
-
-        if (!thread_ans.empty()) {
-#pragma omp critical
-            {
-                ans.insert(ans.end(), thread_ans.begin(), thread_ans.end());
-            }
-        }
-    }
-    return ans;
-}
-
-
 vector<int> partition(string &t, string &p) {
     int N = t.length(), M = p.length();
-    r = M / (K + 1);
-    mp['A'] = 0, mp['C'] = 1, mp['G'] = 2, mp['T'] = 3;
     string interleaved(r * (K + 1), 'A');
     for (int i = 0, ind = 0; i < interleaved.length(); i++) {
         interleaved[i] = p[ind];

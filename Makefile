@@ -9,7 +9,7 @@ all: dirs bitap
 dirs:
 	mkdir -p $(BUILD_DIR)
 
-bitap: $(BUILD_DIR)/driver.o $(BUILD_DIR)/baseline.o $(BUILD_DIR)/partition.o $(BUILD_DIR)/helper.o
+bitap: $(BUILD_DIR)/driver.o $(BUILD_DIR)/baseline.o $(BUILD_DIR)/partition.o $(BUILD_DIR)/partition_parallel.o $(BUILD_DIR)/helper.o
 	$(CC) $(CPPFLAGS) $^ -o bitap
 
 $(BUILD_DIR)/%.o : %.cpp

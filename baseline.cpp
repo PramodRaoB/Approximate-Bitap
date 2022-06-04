@@ -8,9 +8,6 @@ vector<int> baseline(string &t, string &p) {
     init.set();
     vector<vector<bitset<P_LEN + 1>>> dp(K + 1, vector<bitset<P_LEN + 1>>(2, init));
 
-    map<char, int> mp;
-    mp['A'] = 0, mp['C'] = 1, mp['G'] = 2, mp['T'] = 3;
-//    mp['A'] = 0, mp['B'] = 1, mp['C'] = 2, mp['D'] = 3;
     vector<bitset<P_LEN + 1>> patternMask(alpha, init);
     for (int i = 0; i < M; i++)
         patternMask[mp[p[i]]].reset(i);

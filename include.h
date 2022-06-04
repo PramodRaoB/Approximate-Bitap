@@ -8,6 +8,11 @@
 
 //#define K 700
 
+extern std::map<char, int> mp;
+extern int r;
+
+#define CHUNK_SIZE (262144)
+
 const int alpha = 4;
 
 const long long text_len[] = {0, 5154862, 5154862, 5154862, 5154862, 5154862, 5154862, 5154862};
@@ -69,8 +74,11 @@ void tick(struct timeval *t);
 
 double tock(struct timeval *t);
 
+std::vector<int> bitap_base_parallel(std::string &t, std::string &p);
+
 std::vector<int> baseline(std::string &t, std::string &p);
 std::vector<int> partition(std::string &t, std::string &p);
+std::vector<int> partition_parallel(std::string &t, std::string &p);
 std::vector<int> verifier(std::string &t, std::string &p, std::vector<int> &pos);
 
 #endif // APPROX_BITAP_INCLUDE_H

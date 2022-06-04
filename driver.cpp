@@ -8,6 +8,9 @@ std::string text = TEXT;
 std::string pattern = PATTERN;
 std::ifstream file;
 
+map<char, int> mp;
+int r;
+
 int main() {
 #ifdef BUILD
     text = "../" + text;
@@ -19,6 +22,9 @@ int main() {
     cout << "Reading files: " << "\n" << text << "\n" << pattern << endl;
     cout << "Of lengths: " << T_LEN << " " << P_LEN << endl;
 
+    r = p.length() / (K + 1);
+    mp['A'] = 0, mp['C'] = 1, mp['G'] = 2, mp['T'] = 3;
+
     timeval clTime{};
     vector<int> ans;
     tick(&clTime);
@@ -27,7 +33,8 @@ int main() {
     ans = baseline(t, p);
 #endif
 #ifdef PART
-    ans = partition(t, p);
+//    ans = partition(t, p);
+    ans = partition_parallel(t, p);
 #endif
 
     double calcTime = tock(&clTime);
