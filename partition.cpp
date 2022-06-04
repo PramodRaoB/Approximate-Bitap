@@ -88,7 +88,7 @@ vector<int> partition(string &t, string &p) {
 //    mp['A'] = 0, mp['B'] = 1, mp['C'] = 2, mp['D'] = 3;
     vector<bitset<P_LEN + 1>> patternMask(alpha, init);
 
-    for (int i = 0; i < P_LEN; i++)
+    for (int i = 0; i < M; i++)
         patternMask[mp[p[i]]].reset(i);
 
     vector<int> ans;
@@ -109,7 +109,7 @@ vector<int> partition(string &t, string &p) {
                         ((dp[j][0] | patternMask[mp[t[i]]]) << 1) & ((dp[j - 1][0] & dp[j - 1][1]) << 1) & dp[j - 1][0];
                 swap(dp[j - 1][0], dp[j - 1][1]);
             }
-            if (!dp[K][1][P_LEN]) thread_ans.push_back(i);
+            if (!dp[K][1][M]) thread_ans.push_back(i);
             swap(dp[K][0], dp[K][1]);
         }
         if (!thread_ans.empty()) {

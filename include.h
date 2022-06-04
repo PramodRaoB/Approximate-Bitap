@@ -6,36 +6,54 @@
 #include <vector>
 #include <map>
 
-#ifdef SMALL
-#define INP 0
-#define P_LEN 100
-#define T_LEN 10035
-#endif
-#ifdef MED
-#define P_LEN 490
-#define T_LEN 3147090
-#define INP 1
-#endif
-#ifdef LARGE
-#define P_LEN 3366
-#define T_LEN 5154862
-#define INP 2
-#endif
-
-#define K 700
+//#define K 700
 
 const int alpha = 4;
 
-const long long text_len[] = {10035, 3147090, 5154862};
-const long long pattern_len[] = {100, 490, 140};
+const long long text_len[] = {0, 5154862, 5154862, 5154862, 5154862, 5154862, 5154862, 5154862};
+const long long pattern_len[] = {0, 100, 248, 306, 390, 460, 11532, 22539};
 
-const std::string text_file[] = {"sequences/small_t.txt", "sequences/med_t.txt",
-                                 "sequences/large_t.txt"};
-const std::string pattern_file[] = {
-        "sequences/small_p.txt", "sequences/med_p.txt", "sequences/large_p.txt"};
+const std::string text_file[] = {"",
+                                 "sequences/text_1.txt",
+                                 "sequences/text_1.txt",
+                                 "sequences/text_1.txt",
+                                 "sequences/text_1.txt",
+                                 "sequences/text_1.txt",
+                                 "sequences/text_1.txt",
+                                 "sequences/text_1.txt",
+                                 };
 
-const std::string TEXT = text_file[INP];
-const std::string PATTERN = pattern_file[INP];
+const std::string pattern_file[] = {"",
+                                    "sequences/pattern_1.txt",
+                                    "sequences/pattern_2.txt",
+                                    "sequences/pattern_3.txt",
+                                    "sequences/pattern_4.txt",
+                                    "sequences/pattern_5.txt",
+                                    "sequences/pattern_6.txt",
+                                    "sequences/pattern_7.txt",
+                                    };
+
+#define NUM_SRS 5
+#define NUM_LRS 2
+
+#ifndef INPUT
+#define INPUT 0
+#endif
+
+#if INPUT <= NUM_SRS
+#define P_LEN 500
+#define T_LEN 5154862
+// approx 5% error rate for SRS
+#define K 15
+#elif INPUT <= NUM_SRS + NUM_LRS
+#define P_LEN 25000
+#define T_LEN 5154862
+// approx 15% error rate for LRS
+#define K 1000
+#endif
+
+const std::string TEXT = text_file[INPUT];
+const std::string PATTERN = pattern_file[INPUT];
 
 #define READ_FILE(f, str)                                                      \
   string __attribute__((aligned(16))) (str);                                   \

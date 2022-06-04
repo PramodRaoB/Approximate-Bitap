@@ -1,6 +1,5 @@
 CC         := g++
-CPPFLAGS     := -fopenmp -O3 -fopenmp-simd -mavx2 -falign-loops=32 -D$(TYPE) -D$(INP) -g -ftree-vectorize
-# CPPFLAGS     := -qopenmp -O3 -qopenmp-simd -xCORE-AVX2 -D$(TYPE) -D$(INP) -g
+CPPFLAGS     := -fopenmp -O3 -fopenmp-simd -mavx2 -falign-loops=32 -D$(TYPE) -DINPUT=$(INP) -g -ftree-vectorize
 
 BUILD_DIR := build
 

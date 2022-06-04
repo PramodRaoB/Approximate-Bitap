@@ -16,6 +16,9 @@ int main() {
     READ_FILE(text, t);
     READ_FILE(pattern, p);
 
+    cout << "Reading files: " << "\n" << text << "\n" << pattern << endl;
+    cout << "Of lengths: " << T_LEN << " " << P_LEN << endl;
+
     timeval clTime{};
     vector<int> ans;
     tick(&clTime);
