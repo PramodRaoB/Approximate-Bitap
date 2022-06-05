@@ -18,7 +18,7 @@ const int alpha = 4;
 const long long text_len[] = {0, 5154862, 5154862, 5154862, 5154862, 5154862, 5154862, 5154862};
 const long long pattern_len[] = {0, 100, 248, 306, 390, 460, 11532, 22539};
 
-const std::string text_file[] = {"",
+const std::string text_file[] = {"sequences/text_1.txt",
                                  "sequences/text_1.txt",
                                  "sequences/text_1.txt",
                                  "sequences/text_1.txt",
@@ -28,7 +28,7 @@ const std::string text_file[] = {"",
                                  "sequences/text_1.txt",
                                  };
 
-const std::string pattern_file[] = {"",
+const std::string pattern_file[] = {"sequences/pattern_0.txt",
                                     "sequences/pattern_1.txt",
                                     "sequences/pattern_2.txt",
                                     "sequences/pattern_3.txt",
@@ -46,7 +46,7 @@ const std::string pattern_file[] = {"",
 #endif
 
 #if INPUT <= NUM_SRS
-#define P_LEN 500
+#define P_LEN 1000
 #define T_LEN 5154862
 // approx 5% error rate for SRS
 #define K 15
