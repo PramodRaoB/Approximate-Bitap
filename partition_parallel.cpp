@@ -78,7 +78,7 @@ vector<int> partition_parallel(string &t, string &p) {
 #pragma omp parallel for schedule(static, 1) num_threads(2) proc_bind(close)
         for(int j = 0; j < m-1; j++) {
             dp[2][j] =
-                    ((dp[1][j - 1] | patternMask[mp[t[begin + j + 1]]]) << 1) & ((dp[0][j] & dp[1][j]) << 1) & dp[0][j];
+                    ((dp[1][j] | patternMask[mp[t[begin + j + 1]]]) << 1) & ((dp[0][j] & dp[1][j+1]) << 1) & dp[0][j];
         }
         if(!dp[2][0][M]) thread_ans.push_back(begin+1);
         swap(dp[0], dp[1]);
