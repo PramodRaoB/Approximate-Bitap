@@ -16,6 +16,8 @@ vector<int> partition_parallel(string &t, string &p) {
     cout << "Found exact matches of partitions: " << ret.size() << endl;
     vector<pair<int, int>> range;
     pair<int, int> curr = {-1, -1};
+    const int threshold = 20;
+    const int min_overlap = (threshold * 2 * (M + K)) / 100;
     sort(ret.begin(), ret.end());
     for (auto &i: ret) {
         int L = max(0, i - M - K), R = min(N, i + M + K);
@@ -23,7 +25,7 @@ vector<int> partition_parallel(string &t, string &p) {
             curr = {L, R};
             continue;
         }
-        if (curr.second >= L) curr.second = R;
+        if (L <= curr.first - min_overlap) curr.second = R;
         else {
             range.push_back(curr);
             curr = {L, R};
@@ -43,13 +45,13 @@ vector<int> partition_parallel(string &t, string &p) {
         patternMask[mp[p[i]]].reset(i);
 
     vector<int> ans;
-#pragma omp parallel for schedule(static, 1) num_threads(4) proc_bind(spread)
+#pragma omp parallel for schedule(static, 1) num_threads(40) proc_bind(spread)
     for (int ind = 0; ind < range.size(); ind++) {
         int begin = range[ind].first;
         int end = range[ind].second;
         int n = end - begin, m = K + 1;
         vector<int> thread_ans;
-        vector<vector<bitset<P_LEN + 1>>> dp(3, vector<bitset<P_LEN + 1>>(max(m, n), init));
+        vector<vector<bitset<P_LEN + 1>>> dp(3, vector<bitset<P_LEN + 1>>(min(m, n), init));
 
         dp[0][0].reset(0);
         dp[1][0].reset(0);
@@ -64,7 +66,7 @@ vector<int> partition_parallel(string &t, string &p) {
             dp[2][i] = (dp[1][i-1] | patternMask[mp[t[begin+i]]]) << 1;
 
             // do compute
-#pragma omp parallel for schedule(static, 1) num_threads(2) proc_bind(close)
+#pragma omp parallel for schedule(static, 10) num_threads(2) proc_bind(close)
             for(int j = 1; j < i; j++) {
                 dp[2][j] = ((dp[1][j-1] | patternMask[mp[t[begin+j]]]) << 1) & ((dp[0][j-1] & dp[1][j]) << 1) & dp[0][j-1];
             }
@@ -75,7 +77,7 @@ vector<int> partition_parallel(string &t, string &p) {
 
         // init first diagonal, i = m
         dp[2][m-1] = (dp[1][m-1] | patternMask[mp[t[begin+m]]]) << 1;
-#pragma omp parallel for schedule(static, 1) num_threads(2) proc_bind(close)
+#pragma omp parallel for schedule(static, 10) num_threads(2) proc_bind(close)
         for(int j = 0; j < m-1; j++) {
             dp[2][j] =
                     ((dp[1][j] | patternMask[mp[t[begin + j + 1]]]) << 1) & ((dp[0][j] & dp[1][j+1]) << 1) & dp[0][j];
@@ -86,7 +88,7 @@ vector<int> partition_parallel(string &t, string &p) {
 
         for(int i = m+1; i < n; i++) {
             dp[2][m-1] = (dp[1][m-1] | patternMask[mp[t[begin+i]]]) << 1;
-#pragma omp parallel for schedule(static, 1) num_threads(2) proc_bind(close)
+#pragma omp parallel for schedule(static, 10) num_threads(2) proc_bind(close)
             for(int j = 0; j < m-1; j++) {
                 dp[2][j] = ((dp[1][j] | patternMask[mp[t[begin + i + j - m + 1]]]) << 1) &
                            ((dp[0][j + 1] & dp[1][j + 1]) << 1) & dp[0][j + 1];
@@ -98,7 +100,7 @@ vector<int> partition_parallel(string &t, string &p) {
 
         for(int i = n; i < n + m - 1; i++) {
             // m + n - 1 - i elements on diagonal
-#pragma omp parallel for schedule(static, 1) num_threads(2) proc_bind(close)
+#pragma omp parallel for schedule(static, 10) num_threads(2) proc_bind(close)
             for(int j = 0; j < m + n - i - 1; j++) {
                 dp[2][j] = ((dp[1][j] | patternMask[mp[t[begin+i+j-m+1]]]) << 1) & ((dp[0][j+1] & dp[1][j+1]) << 1) & dp[0][j+1];
             }
@@ -132,11 +134,11 @@ vector<int> partition_parallel2(string &t, string &p) {
     const int chunk_size = 5 * P_LEN;
 #pragma omp parallel for schedule(static, 1) num_threads(40) proc_bind(spread)
     for (int ind = 0; ind < T_LEN; ind += chunk_size) {
-        int begin = ind - K - 1;
+        int begin = max(ind - K - 1, 0);
         int end = min(ind + chunk_size, T_LEN);
         int n = end - begin, m = K + 1;
         vector<int> thread_ans;
-        vector<vector<bitset<P_LEN + 1>>> dp(3, vector<bitset<P_LEN + 1>>(max(m, n), init));
+        vector<vector<bitset<P_LEN + 1>>> dp(3, vector<bitset<P_LEN + 1>>(min(m, n), init));
 
         dp[0][0].reset(0);
         dp[1][0].reset(0);
@@ -165,7 +167,7 @@ vector<int> partition_parallel2(string &t, string &p) {
 #pragma omp parallel for schedule(static, 1) num_threads(2) proc_bind(close)
         for(int j = 0; j < m-1; j++) {
             dp[2][j] =
-                    ((dp[1][j - 1] | patternMask[mp[t[begin + j + 1]]]) << 1) & ((dp[0][j] & dp[1][j]) << 1) & dp[0][j];
+                    ((dp[1][j] | patternMask[mp[t[begin + j + 1]]]) << 1) & ((dp[0][j] & dp[1][j+1]) << 1) & dp[0][j];
         }
         if(!dp[2][0][M]) thread_ans.push_back(begin+1);
         swap(dp[0], dp[1]);
