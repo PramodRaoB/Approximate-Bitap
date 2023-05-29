@@ -3,8 +3,8 @@
 
 #include <bitset>
 #include <fstream>
-#include <vector>
 #include <map>
+#include <vector>
 
 //#define K 700
 
@@ -15,28 +15,23 @@ extern int r;
 
 const int alpha = 4;
 
-const long long text_len[] = {0, 5154862, 5154862, 5154862, 5154862, 5154862, 5154862, 5154862};
+const long long text_len[] = {0,       5154862, 5154862, 5154862,
+                              5154862, 5154862, 5154862, 5154862};
 const long long pattern_len[] = {0, 100, 248, 306, 390, 460, 11532, 22539};
 
-const std::string text_file[] = {"sequences/text_1.txt",
-                                 "sequences/text_1.txt",
-                                 "sequences/text_1.txt",
-                                 "sequences/text_1.txt",
-                                 "sequences/text_1.txt",
-                                 "sequences/text_1.txt",
-                                 "sequences/text_1.txt",
-                                 "sequences/text_1.txt",
-                                 };
+const std::string text_file[] = {
+    "sequences/pattern_human.txt", "sequences/text_1.txt",
+    "sequences/text_1.txt",        "sequences/text_1.txt",
+    "sequences/text_1.txt",        "sequences/text_1.txt",
+    "sequences/text_1.txt",        "sequences/text_1.txt",
+};
 
-const std::string pattern_file[] = {"sequences/pattern_0.txt",
-                                    "sequences/pattern_1.txt",
-                                    "sequences/pattern_2.txt",
-                                    "sequences/pattern_3.txt",
-                                    "sequences/pattern_4.txt",
-                                    "sequences/pattern_5.txt",
-                                    "sequences/pattern_6.txt",
-                                    "sequences/pattern_7.txt",
-                                    };
+const std::string pattern_file[] = {
+    "sequences/pattern_orang.txt", "sequences/pattern_1.txt",
+    "sequences/pattern_2.txt",     "sequences/pattern_3.txt",
+    "sequences/pattern_4.txt",     "sequences/pattern_5.txt",
+    "sequences/pattern_6.txt",     "sequences/pattern_7.txt",
+};
 
 #define NUM_SRS 5
 #define NUM_LRS 2
@@ -46,10 +41,12 @@ const std::string pattern_file[] = {"sequences/pattern_0.txt",
 #endif
 
 #if INPUT <= NUM_SRS
-#define P_LEN 1000
-#define T_LEN 5154862
+// #define P_LEN 1000
+// #define T_LEN 5154862
+#define P_LEN 20000
+#define T_LEN 20000
 // approx 5% error rate for SRS
-#define K 15
+#define K 2790
 #elif INPUT <= NUM_SRS + NUM_LRS
 #define P_LEN 25000
 #define T_LEN 5154862
@@ -79,6 +76,7 @@ std::vector<int> bitap_base_parallel(std::string &t, std::string &p);
 std::vector<int> baseline(std::string &t, std::string &p);
 std::vector<int> partition(std::string &t, std::string &p);
 std::vector<int> partition_parallel(std::string &t, std::string &p);
-std::vector<int> verifier(std::string &t, std::string &p, std::vector<int> &pos);
+std::vector<int> verifier(std::string &t, std::string &p,
+                          std::vector<int> &pos);
 
 #endif // APPROX_BITAP_INCLUDE_H
